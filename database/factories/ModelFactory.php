@@ -75,3 +75,65 @@ $factory->define(App\Models\Cart::class, static function (Faker\Generator $faker
         
     ];
 });
+/** @var  \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(App\Models\User::class, static function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->firstName,
+        'email' => $faker->email,
+        'password' => bcrypt($faker->password),
+        'remember_token' => null,
+        'activated' => $faker->boolean(),
+        'forbidden' => $faker->boolean(),
+        'language' => $faker->sentence,
+        'deleted_at' => null,
+        'created_at' => $faker->dateTime,
+        'updated_at' => $faker->dateTime,
+        
+        
+    ];
+});
+/** @var  \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(App\Models\Order::class, static function (Faker\Generator $faker) {
+    return [
+        
+        
+    ];
+});
+/** @var  \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(App\Models\OrderItem::class, static function (Faker\Generator $faker) {
+    return [
+        
+        
+    ];
+});
+/** @var  \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(App\Models\Orderitem::class, static function (Faker\Generator $faker) {
+    return [
+        
+        
+    ];
+});
+/** @var  \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(App\Models\Order::class, static function (Faker\Generator $faker) {
+    return [
+        'po_number' => $faker->sentence,
+        'created_at' => $faker->dateTime,
+        'completed_at' => $faker->sentence,
+        'total_price' => $faker->randomNumber(5),
+        'user_id' => $faker->sentence,
+        
+        
+    ];
+});
+/** @var  \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(App\Models\OrderItem::class, static function (Faker\Generator $faker) {
+    return [
+        'price' => $faker->randomNumber(5),
+        'total_price' => $faker->randomNumber(5),
+        'qty' => $faker->sentence,
+        'inventory_id' => $faker->sentence,
+        'order_id' => $faker->sentence,
+        
+        
+    ];
+});

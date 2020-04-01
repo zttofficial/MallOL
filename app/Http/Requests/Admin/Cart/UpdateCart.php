@@ -15,7 +15,8 @@ class UpdateCart extends FormRequest
      */
     public function authorize(): bool
     {
-        return Gate::allows('admin.cart.edit', $this->cart);
+        // return Gate::allows('admin.cart.edit', $this->cart);
+        return true;
     }
 
     /**
@@ -26,10 +27,7 @@ class UpdateCart extends FormRequest
     public function rules(): array
     {
         return [
-            'sku' => ['nullable', 'string'],
-            'inventory_id' => ['sometimes', 'string'],
-            'user_id' => ['sometimes', 'string'],
-            'qty' => ['nullable', 'string'],
+            'qty' => ['integer'],
             
         ];
     }

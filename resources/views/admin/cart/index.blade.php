@@ -1,18 +1,19 @@
 @extends('layout')
 
-@section('title', trans('admin.cart.actions.index'))
+@section('title', 'Shopping Cart')
 
 @section('content')
 
 <cart-listing
     :data="{{ $data->toJson() }}"
-    :url="'{{ url('admin/carts') }}'"
+    :url="'{{ url('carts') }}'"
     inline-template>
 
 <div>
   <div class="panel is-primary">
     <div class="panel-heading">
-      <i class="fa fa-align-justify"></i> {{ trans('admin.cart.actions.index') }}
+      <i class="fa fa-align-justify"></i> Shopping Cart
+        <div class="float-right">Total: MOP$ @{{ collection.reduce((acc, item) => acc + item.qty * item.inventory.product.price, 0).toFixed(2) }}</div>
     </div>
 
     <div class="panel-block">
@@ -44,10 +45,10 @@
           </tr>
           <tr v-show="(clickedBulkItemsCount > 0) || isClickedAll">
               <td class="bg-bulk-info d-table-cell text-center" colspan="7">
-                          <b-notification class="align-middle font-weight-light text-dark" :closable="false">{{ trans('brackets/admin-ui::admin.listing.selected_items') }} @{{ clickedBulkItemsCount }}.  <a href="#" class="text-primary" @click="onBulkItemsClickedAll('/admin/carts')" v-if="(clickedBulkItemsCount < pagination.state.total)"> <i class="fa" :class="bulkCheckingAllLoader ? 'fa-spinner' : ''"></i> {{ trans('brackets/admin-ui::admin.listing.check_all_items') }} @{{ pagination.state.total }}</a> <span class="text-primary">|</span> <a
+                          <b-notification class="align-middle font-weight-light text-dark" :closable="false">{{ trans('brackets/admin-ui::admin.listing.selected_items') }} @{{ clickedBulkItemsCount }}.  <a href="#" class="text-primary" @click="onBulkItemsClickedAll('/carts')" v-if="(clickedBulkItemsCount < pagination.state.total)"> <i class="fa" :class="bulkCheckingAllLoader ? 'fa-spinner' : ''"></i> {{ trans('brackets/admin-ui::admin.listing.check_all_items') }} @{{ pagination.state.total }}</a> <span class="text-primary">|</span> <a
                                       href="#" class="text-primary" @click="onBulkItemsClickedAllUncheck()">{{ trans('brackets/admin-ui::admin.listing.uncheck_all_items') }}</a> 
 
-            <b-button type="is-danger" @click="bulkDelete('/admin/carts/bulk-destroy')">{{ trans('brackets/admin-ui::admin.btn.delete') }}</b-button>
+            <b-button type="is-danger" @click="bulkDelete('/carts/bulk-destroy')">{{ trans('brackets/admin-ui::admin.btn.delete') }}</b-button>
  </b-notification>
               </td>
           </tr>
@@ -70,14 +71,19 @@
   <div class="media-content">
   <div class="content">
   <p>
-  <strong>@{{item.inventory.product.name}}</strong>       
+      <a :href="`/product/${item.inventory.product.id}`"><strong>@{{item.inventory.product.name}}</strong></a><br>
   <small>@{{ item.inventory.sku }}</small><br>
   <b-tag type="is-primary">@{{ item.inventory.product_attr }}</b-tag> 
   </p>
   </div>
   </div>
                                 </td>
-                                <td><b-numberinput v-model="item.qty"></b-numberinput></td>
+                                <td><b-numberinput :value="item.qty"
+@input="changeQty($event, item.id)"
+                            controls-position="compact" 
+:min="1"
+:max="999"
+></b-numberinput></td>
                                 <td>MOP$ @{{ item.inventory.product.price}}</td>
                                 <td>MOP$ @{{ (item.qty * item.inventory.product.price).toFixed(2) }}</td>
                                 
@@ -106,7 +112,7 @@
       </div>
     </div>
   </div>
-                <b-button type="is-primary">Checkout</b-button>
+                <b-button type="is-primary" @click="checkout">Checkout</b-button>
 </div>
 </cart-listing>
 

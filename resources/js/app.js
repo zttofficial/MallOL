@@ -14,6 +14,8 @@ import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
 import VueCookie from 'vue-cookie';
 import VModal from 'vue-js-modal'
+import VeeValidate from 'vee-validate';
+import Notifications from 'vue-notification';
 
 /**
  * The following block of code may be used to automatically register your
@@ -30,11 +32,17 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 Vue.component('product', require('./components/Product.vue').default);
 Vue.component('product-listing', require('./components/ProductListing.js').default);
 Vue.component('cart-listing', require('./admin/cart/Listing.js').default);
+Vue.component('order-listing', require('./admin/order/Listing.js').default);
+Vue.component('order-form', require('./admin/order/Form.js').default);
+Vue.component('order-item-listing', require('./admin/order-item/Listing.js').default);
 Vue.component('cart', require('./components/Cart.vue').default);
+Vue.component('order', require('./checkout.vue').default);
 Vue.use(Buefy)
 Vue.use(Vuex)
 Vue.use(VueCookie)
 Vue.use(VModal, { dialog: true, dynamic: true, injectModalsContainer: true });
+Vue.use(VeeValidate, {strict: true});
+Vue.use(Notifications);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -42,7 +50,17 @@ Vue.use(VModal, { dialog: true, dynamic: true, injectModalsContainer: true });
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+import { mapActions } from 'vuex'
+
 const app = new Vue({
     el: '#app',
-    store
+    store,
+    created () {
+        this.retrieveCartItem()
+    },
+    methods: {
+        ...mapActions('cart', [
+            'retrieveCartItem'
+        ])
+    }
 });
